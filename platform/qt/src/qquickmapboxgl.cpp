@@ -30,8 +30,7 @@ QQuickFramebufferObject::Renderer *QQuickMapboxGL::createRenderer() const
 
 void QQuickMapboxGL::setPlugin(QDeclarativeGeoServiceProvider *)
 {
-    qWarning() << __PRETTY_FUNCTION__
-        << "Not implemented.";
+    qWarning() << Q_FUNC_INFO << "Not implemented.";
 }
 
 QDeclarativeGeoServiceProvider *QQuickMapboxGL::plugin() const
@@ -142,8 +141,7 @@ QGeoShape QQuickMapboxGL::visibleRegion() const
 
 void QQuickMapboxGL::setCopyrightsVisible(bool)
 {
-    qWarning() << __PRETTY_FUNCTION__
-        << "Not implemented.";
+    qWarning() << Q_FUNC_INFO << "Not implemented.";
 }
 
 bool QQuickMapboxGL::copyrightsVisible() const
