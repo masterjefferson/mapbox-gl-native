@@ -161,6 +161,10 @@ public:
     void addLayer(std::unique_ptr<style::Layer>, const optional<std::string>& beforeLayerID = {});
     void removeLayer(const std::string& layerID);
 
+    // Add icon, bound to the style
+    void addIcon(const std::string&, std::shared_ptr<const SpriteImage>);
+    void removeIcon(const std::string&);
+
     // Defaults
     std::string getStyleName() const;
     LatLng getDefaultLatLng() const;
