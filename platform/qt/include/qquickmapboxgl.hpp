@@ -8,6 +8,7 @@
 #include <QPointF>
 #include <QQuickFramebufferObject>
 
+#include <QMapbox>
 #include <QQuickMapboxGLStyle>
 
 class QDeclarativeGeoServiceProvider;
@@ -118,6 +119,7 @@ signals:
     void styleChanged();
     void bearingChanged(qreal angle);
     void pitchChanged(qreal angle);
+    void mapChanged(QMapbox::MapChange);
 
 public slots:
     void setCenter(const QGeoCoordinate &center);

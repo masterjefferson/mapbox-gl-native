@@ -4,6 +4,7 @@
 #include <QQuickFramebufferObject>
 #include <QScopedPointer>
 
+#include <QMapbox>
 #include <QMapboxGL>
 
 class QGeoCoordinate;
@@ -25,7 +26,7 @@ public:
 
 signals:
     void centerChanged(const QGeoCoordinate &);
-    void styleChanged();
+    void mapChanged(QMapbox::MapChange);
 
 public slots:
     void onMapChanged(QMapbox::MapChange);

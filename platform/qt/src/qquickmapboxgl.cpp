@@ -2,6 +2,7 @@
 
 #include <mbgl/util/constants.hpp>
 
+#include <QMapbox>
 #include <QQuickMapboxGL>
 #include <QQuickMapboxGLStyleProperty>
 
@@ -24,7 +25,7 @@ QQuickMapboxGL::~QQuickMapboxGL()
 QQuickFramebufferObject::Renderer *QQuickMapboxGL::createRenderer() const
 {
     QQuickMapboxGLRenderer *renderer = new QQuickMapboxGLRenderer();
-    connect(renderer, SIGNAL(styleChanged()), this, SIGNAL(styleChanged()));
+    connect(renderer, SIGNAL(mapChanged(QMapbox::MapChange)), this, SIGNAL(mapChanged(QMapbox::MapChange)));
     return renderer;
 }
 
