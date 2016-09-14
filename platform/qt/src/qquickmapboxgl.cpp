@@ -271,20 +271,11 @@ void QQuickMapboxGL::itemChange(QQuickItem::ItemChange change, const QQuickItem:
 {
     QQuickFramebufferObject::itemChange(change, value);
 
-    switch (change) {
-    case QQuickItem::ItemChildAddedChange:
+    if (change == QQuickItem::ItemChildAddedChange) {
         if (QQuickMapboxGLStyleProperty *property = qobject_cast<QQuickMapboxGLStyleProperty *>(value.item)) {
-            connect(property, SIGNAL(updated(QVariantMap)), this, SLOT(onStylePropertyUpdated(QVariantMap)));
-            connect(this, SIGNAL(styleChanged()), property, SLOT(checkUpdated()));
+            qWarning() << "Warning: QQuickMapboxGLStyleProperty should be a child of QQuickMapboxGLStyle.";
+            property->setParentItem(nullptr);
         }
-        break;
-    case QQuickItem::ItemChildRemovedChange:
-        if (QQuickMapboxGLStyleProperty *property = qobject_cast<QQuickMapboxGLStyleProperty *>(value.item)) {
-            disconnect(property, SIGNAL(updated(QVariantMap)), this, SLOT(onStylePropertyUpdated(QVariantMap)));
-            disconnect(this, SIGNAL(styleChanged()), property, SLOT(checkUpdated()));
-        }
-    default:
-        break;
     }
 }
 

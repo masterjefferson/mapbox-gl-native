@@ -78,6 +78,12 @@ ApplicationWindow {
                     style: MapboxStyle {
                         id: styleStreets
                         url: "mapbox://styles/mapbox/streets-v9"
+
+                        MapboxPaintStyleProperty {
+                            id: waterColor
+                            layer: "water"
+                            property: "fill-color"
+                        }
                     }
 
                     center: QtPositioning.coordinate(60.170448, 24.942046) // Helsinki
@@ -90,12 +96,6 @@ ApplicationWindow {
 
                     color: landColorDialog.color
                     copyrightsVisible: true
-
-                    MapboxPaintStyleProperty {
-                        id: waterColor
-                        layer: "water"
-                        property: "fill-color"
-                    }
 
                     Image {
                         id: logo
