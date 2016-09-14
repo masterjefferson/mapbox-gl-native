@@ -822,6 +822,30 @@ void Map::removeLayer(const std::string& id) {
     impl->view.deactivate();
 }
 
+void Map::addIcon(const std::string& name, std::shared_ptr<const SpriteImage> sprite) {
+    if (!impl->style) {
+        return;
+    }
+
+    impl->styleMutated = true;
+    impl->style->spriteStore->setSprite(name, sprite);
+    impl->style->spriteAtlas->updateDirty();
+
+    update(Update::Repaint);
+}
+
+void Map::removeIcon(const std::string& name) {
+    if (!impl->style) {
+        return;
+    }
+
+    impl->styleMutated = true;
+    impl->style->spriteStore->removeSprite(name);
+    impl->style->spriteAtlas->updateDirty();
+
+    update(Update::Repaint);
+}
+
 #pragma mark - Defaults
 
 std::string Map::getStyleName() const {
