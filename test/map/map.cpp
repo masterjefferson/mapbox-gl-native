@@ -6,8 +6,10 @@
 #include <mbgl/map/map.hpp>
 #include <mbgl/platform/default/headless_view.hpp>
 #include <mbgl/platform/default/headless_display.hpp>
+#include <mbgl/sprite/sprite_image.hpp>
 #include <mbgl/storage/network_status.hpp>
 #include <mbgl/storage/default_file_source.hpp>
+#include <mbgl/util/image.hpp>
 #include <mbgl/util/io.hpp>
 #include <mbgl/util/run_loop.hpp>
 #include <mbgl/style/layers/background_layer.hpp>
@@ -262,3 +264,35 @@ TEST(Map, Classes) {
     EXPECT_TRUE(map.getClasses().empty());
     EXPECT_FALSE(map.getTransitionOptions().duration);
 }
+
+TEST(Map, AddIcon) {
+    MapTest test;
+
+    Map map(test.view, test.fileSource, MapMode::Still);
+    auto image = decodeImage(util::read_file("test/fixtures/sprites/default_marker.png"));
+    auto icon = std::make_shared<SpriteImage>(std::move(image), 1.0);
+
+    // No-op.
+    map.addIcon("test-icon", icon);
+
+    map.setStyleJSON(util::read_file("test/fixtures/api/icon_style.json"));
+    map.addIcon("test-icon", icon);
+    test::checkImage("test/fixtures/map/add_icon", test::render(map));
+}
+
+TEST(Map, RemoveIcon) {
+    MapTest test;
+
+    Map map(test.view, test.fileSource, MapMode::Still);
+    auto image = decodeImage(util::read_file("test/fixtures/sprites/default_marker.png"));
+    auto icon = std::make_shared<SpriteImage>(std::move(image), 1.0);
+
+    // No-op.
+    map.addIcon("test-icon", icon);
+
+    map.setStyleJSON(util::read_file("test/fixtures/api/icon_style.json"));
+    map.addIcon("test-icon", icon);
+    map.removeIcon("test-icon");
+    test::checkImage("test/fixtures/map/remove_icon", test::render(map));
+}
+
