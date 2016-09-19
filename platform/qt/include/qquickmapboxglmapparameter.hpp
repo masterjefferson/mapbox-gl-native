@@ -2,34 +2,28 @@
 #define QQUICKMAPBOXGLMAPPARAMETER_H
 
 #include <QObject>
-#include <QQuickItem>
-#include <QString>
+#include <QQmlParserStatus>
+#include <qqml.h>
 
-class Q_DECL_EXPORT QQuickMapboxGLMapParameter : public QQuickItem
+class Q_DECL_EXPORT QQuickMapboxGLMapParameter : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
-
-    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_INTERFACES(QQmlParserStatus)
 
 public:
-    QQuickMapboxGLMapParameter(QQuickItem *parent = Q_NULLPTR);
-    virtual ~QQuickMapboxGLMapParameter() {}
-
-    // QObject implementation
-    bool event(QEvent *) override;
-
-    // QQmlParserStatus implementation
-    void componentComplete() override;
-
-    QString name() const;
-    void setName(const QString &name);
+    QQuickMapboxGLMapParameter(QObject *parent = 0);
+    virtual ~QQuickMapboxGLMapParameter() {};
 
 protected:
-    // QQuickItem implementation
-    void itemChange(QQuickItem::ItemChange, const QQuickItem::ItemChangeData &) override;
+    // QQmlParserStatus implementation
+    void classBegin() override {}
+    void componentComplete() override;
+
+public slots:
+    void propertyChanged(int id);
 
 private:
-    QString m_name;
+    int m_metaPropertyOffset;
 };
 
 QML_DECLARE_TYPE(QQuickMapboxGLMapParameter)

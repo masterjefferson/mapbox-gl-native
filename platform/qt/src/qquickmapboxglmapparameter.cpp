@@ -1,60 +1,39 @@
-#include <QQuickMapboxGLMapParameter>
+#include "QQuickMapboxGLMapParameter"
 
-#include <QEvent>
-#include <QDynamicPropertyChangeEvent>
+#include <QByteArray>
+#include <QMetaObject>
+#include <QMetaProperty>
+#include <QSignalMapper>
+#include <QVariant>
+#include <QList>
+#include <QDebug>
 
-QQuickMapboxGLMapParameter::QQuickMapboxGLMapParameter(QQuickItem *parent)
-    : QQuickItem(parent)
+QQuickMapboxGLMapParameter::QQuickMapboxGLMapParameter(QObject *parent)
+    : QObject(parent)
+    , m_metaPropertyOffset(metaObject()->propertyCount())
 {
-    qDebug() << __PRETTY_FUNCTION__;
-    //setFlag(QQuickItem::ItemHasContents);
-}
-
-QString QQuickMapboxGLMapParameter::name() const
-{
-    return m_name;
-}
-
-void QQuickMapboxGLMapParameter::setName(const QString &name)
-{
-    if (!m_name.isEmpty()) {
-        qWarning() << "Error: Name can only be set once.";
-        return;
-    }
-
-    if (name.isEmpty()) {
-        qWarning() << "Error: Name cannot be empty.";
-        return;
-    }
-
-    qDebug() << __PRETTY_FUNCTION__ << name;
-
-    m_name = name;
 }
 
 void QQuickMapboxGLMapParameter::componentComplete()
 {
-    QQuickItem::componentComplete();
-    qDebug() << __PRETTY_FUNCTION__ << dynamicPropertyNames().size();
-    qDebug() << __PRETTY_FUNCTION__ << metaObject()->propertyCount();
-    for (auto i = 0; i < metaObject()->propertyCount(); ++i) {
+    for (int i = m_metaPropertyOffset; i < metaObject()->propertyCount(); ++i) {
         QMetaProperty prop = metaObject()->property(i);
-        qDebug() << __PRETTY_FUNCTION__ << prop.name() << property(prop.name());
+
+        if (!prop.hasNotifySignal()) {
+            continue;
+        }
+
+        auto mapper = new QSignalMapper(this);
+        mapper->setMapping(this, i);
+
+        const QByteArray signalName = '2' + prop.notifySignal().methodSignature();
+        QObject::connect(this, signalName, mapper, SLOT(map()));
+        QObject::connect(mapper, SIGNAL(mapped(int)), this, SLOT(propertyChanged(int)));
     }
 }
 
-bool QQuickMapboxGLMapParameter::event(QEvent *event)
+void QQuickMapboxGLMapParameter::propertyChanged(int id)
 {
-    qDebug() << __PRETTY_FUNCTION__ << event;
-    if (event->type() == QEvent::DynamicPropertyChange) {
-        QDynamicPropertyChangeEvent *change = static_cast<QDynamicPropertyChangeEvent *>(event);
-        qDebug() << "[" << m_name << "] " << change->propertyName() << ": " << property(change->propertyName());
-    }
-    return QQuickItem::event(event);
-}
-
-void QQuickMapboxGLMapParameter::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
-{
-    qDebug() << __PRETTY_FUNCTION__ << change;
-    QQuickItem::itemChange(change, value);
+    QMetaProperty prop = metaObject()->property(id);
+    qDebug() << __PRETTY_FUNCTION__ << prop.name() << prop.read(this);
 }

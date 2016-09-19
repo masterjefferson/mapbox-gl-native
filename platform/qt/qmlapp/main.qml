@@ -47,8 +47,12 @@ ApplicationWindow {
     }
 
     MapboxMapParameter {
-        name: "foo"
-        property var foo: "bar"
+        property var name: "test123"
+        property var foo: bearingSlider.value
+        property var bar: pitchSlider.value
+        property var value: roadLabel.checked ? "visible" : "none"
+        property var list: [ 1, 2, 3 ]
+        property var map: { 'color': 'red', 'width': 100 }
     }
 
     RowLayout {
