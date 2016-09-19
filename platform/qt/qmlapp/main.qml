@@ -46,6 +46,11 @@ ApplicationWindow {
         value: roadLabel.checked ? "visible" : "none"
     }
 
+    MapboxMapParameter {
+        name: "foo"
+        property var foo: "bar"
+    }
+
     RowLayout {
         anchors.fill: parent
         anchors.margins: 50
@@ -85,6 +90,7 @@ ApplicationWindow {
                             property: "fill-color"
                         }
                     }
+
 
                     center: QtPositioning.coordinate(60.170448, 24.942046) // Helsinki
                     zoomLevel: 14
