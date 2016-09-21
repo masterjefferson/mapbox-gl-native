@@ -10,7 +10,6 @@
 #include <QQmlListProperty>
 
 #include <QMapbox>
-#include <QQuickMapboxGLStyle>
 #include <QQuickMapboxGLMapParameter>
 
 class QDeclarativeGeoServiceProvider;
@@ -35,7 +34,6 @@ class Q_DECL_EXPORT QQuickMapboxGL : public QQuickFramebufferObject
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
 
     // MapboxGL QML Type interface.
-    Q_PROPERTY(QQuickMapboxGLStyle *style READ style WRITE setStyle NOTIFY styleChanged)
     Q_PROPERTY(qreal bearing READ bearing WRITE setBearing NOTIFY bearingChanged)
     Q_PROPERTY(qreal pitch READ pitch WRITE setPitch NOTIFY pitchChanged)
 
@@ -77,9 +75,6 @@ public:
     Q_INVOKABLE void pan(int dx, int dy);
 
     // MapboxGL QML Type interface.
-    void setStyle(QQuickMapboxGLStyle *);
-    QQuickMapboxGLStyle* style() const;
-
     void setBearing(qreal bearing);
     qreal bearing() const;
 
@@ -104,6 +99,7 @@ public:
     QQmlListProperty<QQuickMapboxGLMapParameter> parameters();
 
 signals:
+    // Map QML Type signals.
     void minimumZoomLevelChanged();
     void maximumZoomLevelChanged();
     void zoomLevelChanged(qreal zoomLevel);
@@ -115,7 +111,7 @@ signals:
     void copyrightsVisibleChanged(bool visible);
     void colorChanged(const QColor &color);
 
-    void styleChanged();
+    // Mapbox-specific signals.
     void bearingChanged(qreal angle);
     void pitchChanged(qreal angle);
     void mapChanged(QMapbox::MapChange);
@@ -124,7 +120,6 @@ public slots:
     void setCenter(const QGeoCoordinate &center);
 
 private slots:
-    void onStyleChanged();
     void onParameterPropertyUpdated(const QString &name);
 
 private:
@@ -150,10 +145,10 @@ private:
     QGeoCoordinate m_center;
     QGeoShape m_visibleRegion;
     QColor m_color;
+    QString m_styleUrl;
     QList<StyleProperty> m_stylePropertyChanges;
     QList<QQuickMapboxGLMapParameter*> m_parameters;
 
-    QQuickMapboxGLStyle *m_style = 0;
     qreal m_bearing = 0;
     qreal m_pitch = 0;
 

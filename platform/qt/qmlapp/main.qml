@@ -54,12 +54,12 @@ ApplicationWindow {
                     anchors.fill: parent
                     visible: false
 
-                    style: MapboxStyle {
-                        id: styleStreets
-                        url: "mapbox://styles/mapbox/streets-v9"
-                    }
-
                     parameters: [
+                        MapParameter {
+                            id: styleStreets
+                            property var type: "style"
+                            property var url: "mapbox://styles/mapbox/streets-v9"
+                        },
                         MapParameter {
                             property var type: "paint"
                             property var layer: "water"
@@ -158,10 +158,12 @@ ApplicationWindow {
                     anchors.fill: parent
                     visible: false
 
-                    style: MapboxStyle {
-                        id: styleSatellite
-                        url: "mapbox://styles/mapbox/satellite-streets-v9"
-                    }
+                    parameters: [
+                        MapParameter {
+                            property var type: "style"
+                            property var url: "mapbox://styles/mapbox/satellite-streets-v9"
+                        }
+                    ]
 
                     center: mapFront.center
                     zoomLevel: mapFront.zoomLevel

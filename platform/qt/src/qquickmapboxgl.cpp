@@ -175,31 +175,6 @@ void QQuickMapboxGL::pan(int dx, int dy)
     update();
 }
 
-void QQuickMapboxGL::setStyle(QQuickMapboxGLStyle *style)
-{
-    if (style == m_style) {
-        return;
-    }
-
-    disconnect(style, SIGNAL(urlChanged(QString)), this, SLOT(onStyleChanged()));
-    delete m_style;
-    m_style = style;
-    if (style) {
-        style->setParentItem(this);
-        connect(style, SIGNAL(urlChanged(QString)), this, SLOT(onStyleChanged()));
-    }
-
-    m_syncState |= StyleNeedsSync;
-    update();
-
-    emit styleChanged();
-}
-
-QQuickMapboxGLStyle *QQuickMapboxGL::style() const
-{
-    return m_style;
-}
-
 void QQuickMapboxGL::setBearing(qreal angle)
 {
     angle = std::fmod(angle, 360.);
@@ -298,6 +273,9 @@ void QQuickMapboxGL::onParameterPropertyUpdated(const QString &propertyName)
         m_stylePropertyChanges << change;
 
     } else if (type == "style") {
+        m_styleUrl = param->property("url").toString();
+        m_syncState |= StyleNeedsSync;
+
     } else if (type == "layer") {
     } else if (type == "source") {
     } else if (type == "filter") {
@@ -307,14 +285,6 @@ void QQuickMapboxGL::onParameterPropertyUpdated(const QString &propertyName)
     }
 
     update();
-}
-
-void QQuickMapboxGL::onStyleChanged()
-{
-    m_syncState |= StyleNeedsSync;
-    update();
-
-    emit styleChanged();
 }
 
 void QQuickMapboxGL::appendParameter(QQmlListProperty<QQuickMapboxGLMapParameter> *prop, QQuickMapboxGLMapParameter *param)
