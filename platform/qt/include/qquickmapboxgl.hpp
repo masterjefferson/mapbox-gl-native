@@ -18,9 +18,8 @@ class Q_DECL_EXPORT QQuickMapboxGL : public QQuickFramebufferObject
 {
     Q_OBJECT
 
-    // Map QML Type interface implementation.
+    // Map QML Type interface.
     Q_ENUMS(QGeoServiceProvider::Error)
-    Q_PROPERTY(QDeclarativeGeoServiceProvider *plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(qreal minimumZoomLevel READ minimumZoomLevel WRITE setMinimumZoomLevel NOTIFY minimumZoomLevelChanged)
     Q_PROPERTY(qreal maximumZoomLevel READ maximumZoomLevel WRITE setMaximumZoomLevel NOTIFY maximumZoomLevelChanged)
     Q_PROPERTY(qreal zoomLevel READ zoomLevel WRITE setZoomLevel NOTIFY zoomLevelChanged)
@@ -44,9 +43,6 @@ public:
     virtual Renderer *createRenderer() const Q_DECL_FINAL;
 
     // Map QML Type interface implementation.
-    void setPlugin(QDeclarativeGeoServiceProvider *plugin);
-    QDeclarativeGeoServiceProvider *plugin() const;
-
     void setMinimumZoomLevel(qreal minimumZoomLevel);
     qreal minimumZoomLevel() const;
 
@@ -72,9 +68,6 @@ public:
 
     Q_INVOKABLE void pan(int dx, int dy);
 
-    QList<QVariantMap>& layoutPropertyChanges() { return m_layoutChanges; }
-    QList<QVariantMap>& paintPropertyChanges() { return m_paintChanges; }
-
     // MapboxGL QML Type interface.
     void setStyle(QQuickMapboxGLStyle *);
     QQuickMapboxGLStyle* style() const;
@@ -86,6 +79,8 @@ public:
     qreal pitch() const;
 
     QPointF swapPan();
+    QList<QVariantMap>& layoutPropertyChanges() { return m_layoutChanges; }
+    QList<QVariantMap>& paintPropertyChanges() { return m_paintChanges; }
 
     enum SyncState {
         NothingNeedsSync = 0,
@@ -110,7 +105,6 @@ signals:
     void centerChanged(const QGeoCoordinate &coordinate);
 
     // Compatibility with Map QML Type, but no-op.
-    void pluginChanged(QDeclarativeGeoServiceProvider *plugin);
     void errorChanged();
     void copyrightLinkActivated(const QString &link);
     void copyrightsVisibleChanged(bool visible);
