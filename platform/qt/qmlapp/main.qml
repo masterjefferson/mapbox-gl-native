@@ -16,43 +16,13 @@ ApplicationWindow {
     ColorDialog {
         id: landColorDialog
         title: "Land color"
-        onCurrentColorChanged: { mapFront.color = currentColor }
+        color: "#e0ded8"
     }
 
     ColorDialog {
         id: waterColorDialog
         title: "Water color"
-        onCurrentColorChanged: { waterColor.value = currentColor }
-    }
-
-    MapboxLayoutStyleProperty {
-        parent: styleStreets
-        layer: "road-label-large"
-        property: "visibility"
-        value: roadLabel.checked ? "visible" : "none"
-    }
-
-    MapboxLayoutStyleProperty {
-        parent: styleStreets
-        layer: "road-label-medium"
-        property: "visibility"
-        value: roadLabel.checked ? "visible" : "none"
-    }
-
-    MapboxLayoutStyleProperty {
-        parent: styleStreets
-        layer: "road-label-small"
-        property: "visibility"
-        value: roadLabel.checked ? "visible" : "none"
-    }
-
-    MapboxMapParameter {
-        property var name: "test123"
-        property var foo: bearingSlider.value
-        property var bar: pitchSlider.value
-        property var value: roadLabel.checked ? "visible" : "none"
-        property var list: [ 1, 2, 3 ]
-        property var map: { 'color': 'red', 'width': 100 }
+        color: "#63c5ee"
     }
 
     RowLayout {
@@ -87,14 +57,30 @@ ApplicationWindow {
                     style: MapboxStyle {
                         id: styleStreets
                         url: "mapbox://styles/mapbox/streets-v9"
-
-                        MapboxPaintStyleProperty {
-                            id: waterColor
-                            layer: "water"
-                            property: "fill-color"
-                        }
                     }
 
+                    parameters: [
+                        MapParameter {
+                            property var type: "paint"
+                            property var layer: "water"
+                            property var fillColor: waterColorDialog.color
+                        },
+                        MapParameter {
+                            property var type: "layout"
+                            property var layer: "road-label-large"
+                            property var visibility: roadLabel.checked ? "visible" : "none"
+                        },
+                        MapParameter {
+                            property var type: "layout"
+                            property var layer: "road-label-medium"
+                            property var visibility: roadLabel.checked ? "visible" : "none"
+                        },
+                        MapParameter {
+                            property var type: "layout"
+                            property var layer: "road-label-small"
+                            property var visibility: roadLabel.checked ? "visible" : "none"
+                        }
+                    ]
 
                     center: QtPositioning.coordinate(60.170448, 24.942046) // Helsinki
                     zoomLevel: 14

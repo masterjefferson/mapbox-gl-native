@@ -4,9 +4,7 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 #include <QSignalMapper>
-#include <QVariant>
-#include <QList>
-#include <QDebug>
+
 
 QQuickMapboxGLMapParameter::QQuickMapboxGLMapParameter(QObject *parent)
     : QObject(parent)
@@ -17,23 +15,24 @@ QQuickMapboxGLMapParameter::QQuickMapboxGLMapParameter(QObject *parent)
 void QQuickMapboxGLMapParameter::componentComplete()
 {
     for (int i = m_metaPropertyOffset; i < metaObject()->propertyCount(); ++i) {
-        QMetaProperty prop = metaObject()->property(i);
+        QMetaProperty property = metaObject()->property(i);
 
-        if (!prop.hasNotifySignal()) {
-            continue;
+        if (!property.hasNotifySignal()) {
+            return;
         }
+
+        emit propertyUpdated(property.name());
 
         auto mapper = new QSignalMapper(this);
         mapper->setMapping(this, i);
 
-        const QByteArray signalName = '2' + prop.notifySignal().methodSignature();
+        const QByteArray signalName = '2' + property.notifySignal().methodSignature();
         QObject::connect(this, signalName, mapper, SLOT(map()));
-        QObject::connect(mapper, SIGNAL(mapped(int)), this, SLOT(propertyChanged(int)));
+        QObject::connect(mapper, SIGNAL(mapped(int)), this, SLOT(onPropertyUpdated(int)));
     }
 }
 
-void QQuickMapboxGLMapParameter::propertyChanged(int id)
+void QQuickMapboxGLMapParameter::onPropertyUpdated(int index)
 {
-    QMetaProperty prop = metaObject()->property(id);
-    qDebug() << __PRETTY_FUNCTION__ << prop.name() << prop.read(this);
+    emit propertyUpdated(metaObject()->property(index).name());
 }

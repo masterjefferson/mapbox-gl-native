@@ -5,7 +5,6 @@
 
 #include <QQuickMapboxGL>
 #include <QQuickMapboxGLStyle>
-#include <QQuickMapboxGLStyleProperty>
 #include <QQuickMapboxGLMapParameter>
 
 int main(int argc, char *argv[])
@@ -18,9 +17,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<QQuickMapboxGL>("QQuickMapboxGL", 1, 0, "MapboxMap");
     qmlRegisterType<QQuickMapboxGLStyle>("QQuickMapboxGL", 1, 0, "MapboxStyle");
-    qmlRegisterType<QQuickMapboxGLLayoutStyleProperty>("QQuickMapboxGL", 1, 0, "MapboxLayoutStyleProperty");
-    qmlRegisterType<QQuickMapboxGLPaintStyleProperty>("QQuickMapboxGL", 1, 0, "MapboxPaintStyleProperty");
-    qmlRegisterType<QQuickMapboxGLMapParameter>("QQuickMapboxGL", 1, 0, "MapboxMapParameter");
+    qmlRegisterType<QQuickMapboxGLMapParameter>("QQuickMapboxGL", 1, 0, "MapParameter");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
